@@ -215,10 +215,10 @@ public class FibonacciHeap
     public static class HeapNode{
 
     	public int key;
+        public int rank;
         public HeapNode right;
         public HeapNode left;
         public HeapNode parent;
-        public HeapNode rightChild;
         public HeapNode leftChild;
 
     	public HeapNode(int key) {
