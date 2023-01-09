@@ -5,6 +5,12 @@
  */
 public class FibonacciHeap
 {
+    public int size = 0;
+    public int cuts;
+    public int maxDeg; //degree of the largest tree in the heap
+    public HeapNode head; //pointer to left-most node
+    public HeapNode last; //pointer to right-most node
+    public HeapNode min; //pointer to min node
 
    /**
     * public boolean isEmpty()
@@ -14,7 +20,8 @@ public class FibonacciHeap
     */
     public boolean isEmpty()
     {
-    	return false; // should be replaced by student code
+
+        return this.size == 0;
     }
 		
    /**
@@ -25,10 +32,17 @@ public class FibonacciHeap
     * 
     * Returns the newly created node.
     */
-    public HeapNode insert(int key)
-    {    
-    	return new HeapNode(key); // should be replaced by student code
-    }
+   public HeapNode insert(int key)
+   {
+       HeapNode newNode = new HeapNode(key);
+       last.left = newNode;
+       newNode.right = last;
+       last = newNode;
+       if(key < this.min.getKey()){
+           this.min = newNode;
+       }
+       return newNode;
+   }
 
    /**
     * public void deleteMin()
@@ -50,7 +64,7 @@ public class FibonacciHeap
     */
     public HeapNode findMin()
     {
-    	return new HeapNode(678);// should be replaced by student code
+    	return this.min;
     } 
     
    /**
@@ -59,10 +73,17 @@ public class FibonacciHeap
     * Melds heap2 with the current heap.
     *
     */
-    public void meld (FibonacciHeap heap2)
-    {
-    	  return; // should be replaced by student code   		
-    }
+   public void meld (FibonacciHeap heap2) {
+
+       HeapNode otherRoot = heap2.head;
+       last.right = otherRoot;
+       otherRoot.right = last;
+       last = otherRoot;
+
+       if(heap2.min.getKey() < this.min.getKey()){
+           this.min = heap2.min;
+       }
+   }
 
    /**
     * public int size()
@@ -72,7 +93,7 @@ public class FibonacciHeap
     */
     public int size()
     {
-    	return -123; // should be replaced by student code
+    	return size;
     }
     	
     /**
@@ -135,6 +156,16 @@ public class FibonacciHeap
         return -234; // should be replaced by student code
     }
 
+    public static void link(HeapNode root1, HeapNode root2){ //links smaller tree from the right
+        HeapNode bigger = root2;
+        if(root1.getKey() > root2.getKey()){
+            bigger = root1;
+        }
+    }
+
+    public static void cut(HeapNode root1, HeapNode root2) { //cuts subtree
+    }
+
    /**
     * public static int totalLinks() 
     *
@@ -184,6 +215,11 @@ public class FibonacciHeap
     public static class HeapNode{
 
     	public int key;
+        public HeapNode right;
+        public HeapNode left;
+        public HeapNode parent;
+        public HeapNode rightChild;
+        public HeapNode leftChild;
 
     	public HeapNode(int key) {
     		this.key = key;
