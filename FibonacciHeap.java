@@ -139,7 +139,7 @@ public class FibonacciHeap
             current = current.right;
 
         }
-
+	// need to add an order for the binomal heap from low rank to high
     }
    /**
     * public HeapNode findMin()
