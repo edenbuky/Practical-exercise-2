@@ -7,7 +7,7 @@ public class FibonacciHeap
 {
     public int size = 0;
     public int cuts;
-    public int maxDeg; //degree of the largest tree in the heap
+    public int maxDeg = 0; //degree of the largest tree in the heap
     public HeapNode head; //pointer to left-most node
     public HeapNode last; //pointer to right-most node
     public HeapNode min; //pointer to min node
@@ -52,10 +52,95 @@ public class FibonacciHeap
     */
     public void deleteMin()
     {
+        HeapNode current, temp;
+        //add minimum child-trees to the heap and delete minimum
+        current = min.leftChild;
+        if (current != null)
+        {
+            temp = current.left;
+            current.left = min.left;
+            min.left.right = current;
+            min.left = null;
+            temp.right = min.right;
+            min.right.left = temp;
+            min.right = null;
+            min.leftChild = null;
+
+        }
+        else
+        {
+           current = min.left;
+           temp = min.right;
+           current.right = temp;
+           temp.left = current;
+           min.left = null;
+           min.right = null;
+        }
+
+        consolidating();
+
+        // Update min-pointer
+        current = head.right;
+        min = head;
+        while (current != head)
+        {
+            if (min.getKey() > current.getKey())
+            {
+                min = current;
+            }
+            current = current.right;
+        }
+
+
      	return; // should be replaced by student code
      	
     }
+    /**
+     * Linking 2 trees with the same rank
+     * root1.rank == root2.rank
+     */
+    public HeapNode linking(HeapNode root1,HeapNode root2)
+    {
+        if (root1.getKey() > root2.getKey()){
+            linking(root2,root1);
+        }
+        if (root1.leftChild == null){
+            root2.right = root2;
+            root2.left = root2;
+        }
+        else {
+            root2.right = root1.leftChild;
+            root1.leftChild.left = root2;
+        }
+        root1.leftChild = root2;
+        root2.parent = root1;
+        root1.rank += 1;
 
+        return root1;
+    }
+
+    /**
+     *
+     */
+    public void consolidating()
+    {
+        HeapNode[] rankCells = new HeapNode[maxDeg + 1];
+        HeapNode current = head.right;
+
+        for (int i = 0; i <= maxDeg; i++){rankCells[i] = null;}
+        rankCells[head.rank] = head;
+
+        while (current != head)
+        {
+            while (rankCells[current.rank] != null){
+                current = linking(current,rankCells[current.rank]);
+            }
+            rankCells[current.rank] = current;
+            current = current.right;
+
+        }
+
+    }
    /**
     * public HeapNode findMin()
     *
@@ -216,6 +301,7 @@ public class FibonacciHeap
 
     	public int key;
         public int rank;
+        public int mark;
         public HeapNode right;
         public HeapNode left;
         public HeapNode parent;
@@ -228,5 +314,6 @@ public class FibonacciHeap
     	public int getKey() {
     		return this.key;
     	}
+
     }
 }
