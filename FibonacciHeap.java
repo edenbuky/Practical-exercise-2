@@ -11,6 +11,9 @@ public class FibonacciHeap
     public HeapNode head; //pointer to left-most node
     public HeapNode last; //pointer to right-most node
     public HeapNode min; //pointer to min node
+    public static int totaLinks = 0;
+    public static int totalCats = 0;
+    public int nonMarked = 0;
 
    /**
     * public boolean isEmpty()
@@ -35,6 +38,7 @@ public class FibonacciHeap
    public HeapNode insert(int key)
    {
        HeapNode newNode = new HeapNode(key);
+       nonMarked +=1;
        last.left = newNode;
        newNode.right = last;
        last = newNode;
@@ -58,6 +62,7 @@ public class FibonacciHeap
         if (current != null)
         {
             temp = current.left;
+            temp.mark = 0;
             current.left = min.left;
             min.left.right = current;
             min.left = null;
@@ -65,7 +70,13 @@ public class FibonacciHeap
             min.right.left = temp;
             min.right = null;
             min.leftChild = null;
+            while (current != temp){
+                if (current.mark == 1){
+                    current.mark = 0;
+                    nonMarked -= 1;
+                }
 
+            }
         }
         else
         {
@@ -77,6 +88,7 @@ public class FibonacciHeap
            min.right = null;
         }
 
+        //Successive Linking
         consolidating();
 
         // Update min-pointer
@@ -90,10 +102,6 @@ public class FibonacciHeap
             }
             current = current.right;
         }
-
-
-     	return; // should be replaced by student code
-     	
     }
     /**
      * Linking 2 trees with the same rank
@@ -115,21 +123,23 @@ public class FibonacciHeap
         root1.leftChild = root2;
         root2.parent = root1;
         root1.rank += 1;
-
+        totaLinks += 1;
         return root1;
     }
 
     /**
-     *
+     * Successive linking trees with the same rank, to reduce the amount of threes in the heap
      */
     public void consolidating()
     {
         HeapNode[] rankCells = new HeapNode[maxDeg + 1];
-        HeapNode current = head.right;
+        HeapNode temp, current = head.right;
 
+        //emptying the array
         for (int i = 0; i <= maxDeg; i++){rankCells[i] = null;}
         rankCells[head.rank] = head;
 
+        //traverse the root list. Whenever we discover two trees that have the same rank we link these trees.
         while (current != head)
         {
             while (rankCells[current.rank] != null){
@@ -139,7 +149,19 @@ public class FibonacciHeap
             current = current.right;
 
         }
-	// need to add an order for the binomal heap from low rank to high
+
+        //Update the head to the root with the smallest rank
+        current = head.right;
+        temp = head;
+        while (current != head)
+        {
+            if (temp.rank > current.rank){
+                temp = current;
+            }
+            current = current.right;
+        }
+        head = temp;
+
     }
    /**
     * public HeapNode findMin()
@@ -201,9 +223,10 @@ public class FibonacciHeap
 	* It is assumed that x indeed belongs to the heap.
     *
     */
-    public void delete(HeapNode x) 
-    {    
-    	return; // should be replaced by student code
+    public void delete(HeapNode x)
+    {
+    	decreaseKey(x,min.getKey() - 1);
+        deleteMin();
     }
 
    /**
@@ -224,7 +247,7 @@ public class FibonacciHeap
     */
     public int nonMarked() 
     {    
-        return -232; // should be replaced by student code
+        return nonMarked; // should be replaced by student code
     }
 
    /**
@@ -261,7 +284,7 @@ public class FibonacciHeap
     */
     public static int totalLinks()
     {    
-    	return -345; // should be replaced by student code
+    	return totaLinks; // should be replaced by student code
     }
 
    /**
@@ -273,7 +296,7 @@ public class FibonacciHeap
     */
     public static int totalCuts()
     {    
-    	return -456; // should be replaced by student code
+    	return totalCats; // should be replaced by student code
     }
 
      /**
@@ -300,8 +323,8 @@ public class FibonacciHeap
     public static class HeapNode{
 
     	public int key;
-        public int rank;
-        public int mark;
+        public int rank = 0;
+        public int mark = 0;
         public HeapNode right;
         public HeapNode left;
         public HeapNode parent;
