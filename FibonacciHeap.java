@@ -6,7 +6,7 @@
 public class FibonacciHeap
 {
     public int size = 0; //num of trees
-    public int maxDeg = 0; //degree of the largest tree in the heap
+    public HeapNode maxDeg; //pointer to the largest tree in the heap
     public HeapNode head; //pointer to right-most node
     public HeapNode last; //pointer to left-most node
     public HeapNode min; //pointer to min node
@@ -24,7 +24,7 @@ public class FibonacciHeap
         head = root;
         min = root;
         last = root;
-        maxDeg = root.rank;
+        maxDeg = root;
         size = 1;
     }
 
@@ -137,8 +137,8 @@ public class FibonacciHeap
         }
         root1.leftChild = root2;
         root2.parent = root1;
-        root1.rank += 1;
-        totalLinks += 1;
+        root1.rank ++;
+        totalLinks ++;
         return root1;
     }
 
@@ -147,11 +147,12 @@ public class FibonacciHeap
      */
     public void consolidating()
     {
-        HeapNode[] rankCells = new HeapNode[maxDeg + 1];
+        int maxDegree = maxDeg.rank;
+        HeapNode[] rankCells = new HeapNode[maxDegree + 1];
         HeapNode temp, current = head.right;
 
         //emptying the array
-        for (int i = 0; i <= maxDeg; i++){rankCells[i] = null;}
+        for (int i = 0; i <= maxDegree; i++){rankCells[i] = null;}
         rankCells[head.rank] = head;
 
         //traverse the root list. Whenever we discover two trees that have the same rank we link these trees.
@@ -206,7 +207,9 @@ public class FibonacciHeap
        if(heap2.min.getKey() < this.min.getKey()){
            this.min = heap2.min;
        }
-       maxDeg = Math.max(maxDeg, heap2.maxDeg);
+       if(heap2.maxDeg.rank > maxDeg.rank){
+           maxDeg = heap2.maxDeg;
+       };
    }
 
    /**
@@ -229,7 +232,7 @@ public class FibonacciHeap
     */
     public int[] countersRep()
     {
-    	int[] arr = new int[maxDeg + 1];
+    	int[] arr = new int[maxDeg.rank + 1];
         HeapNode curr = this.head;
         while(curr != null){
             int deg = curr.rank;
@@ -269,7 +272,6 @@ public class FibonacciHeap
         }
         if(x.getKey() < parent.getKey()){
             cascading_cut(x, parent);
-            return;
         }
     }
 
