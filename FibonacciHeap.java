@@ -371,11 +371,29 @@ public class FibonacciHeap
     *  
     * ###CRITICAL### : you are NOT allowed to change H. 
     */
-    public static int[] kMin(FibonacciHeap H, int k)
-    {    
-        int[] arr = new int[100];
-        return arr; // should be replaced by student code
-    }
+     public static int[] kMin(FibonacciHeap H, int k) {
+         int[] arr = new int[k];
+         arr[0] = H.head.getKey();
+         FibonacciHeap helper = new FibonacciHeap();
+         HeapNode first = H.head.leftChild, curr = first.right;
+         int count = 1;
+         while (count < k){
+             //enter unsorted children to helper
+             while (curr != first) {
+                 helper.insert(curr.getKey());
+             }
+
+             //enter children to arr in order
+             while (count < k && !(helper.isEmpty())) {
+                 arr[count] = helper.findMin().getKey();
+                 count++;
+                 helper.deleteMin();
+             }
+             // move to next level of children
+             first = first.leftChild;
+         }
+         return arr; // should be replaced by student code
+     }
     
    /**
     * public class HeapNode
