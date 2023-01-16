@@ -27,7 +27,7 @@ public class FibonacciHeap
         maxDeg = root;
         size = 1;
     }
-
+    public HeapNode getFirst(){return head;}
    /**
     * public boolean isEmpty()
     *
@@ -415,7 +415,24 @@ public class FibonacciHeap
     	public HeapNode(int key) {
     		this.key = key;
     	}
-
+       public int getRank(){
+           return this.rank;
+       }
+       public boolean getMarked(){
+           return (this.mark==1);
+       }
+       public HeapNode getParent(){
+           return this.parent;
+       }
+       public HeapNode getNext(){
+           return this.right;
+       }
+       public HeapNode getPrev(){
+           return this.left;
+       }
+       public HeapNode getChild(){
+           return this.leftChild;
+       }
     	public int getKey() {
     		return this.key;
     	}
