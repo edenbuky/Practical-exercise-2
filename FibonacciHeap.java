@@ -7,8 +7,7 @@ public class FibonacciHeap
 {
     public int size = 0; //num of trees
     public HeapNode maxDeg; //pointer to the largest tree in the heap
-    public HeapNode head; //pointer to right-most node
-    public HeapNode last; //pointer to left-most node
+    public HeapNode head; //pointer to newest node (lefmost)
     public HeapNode min; //pointer to min node
     public static int totalLinks = 0;
     public static int totalCuts = 0;
@@ -21,13 +20,13 @@ public class FibonacciHeap
 
 
     public FibonacciHeap(HeapNode root){
-        head = root;
         min = root;
-        last = root;
+        head = root;
         maxDeg = root;
         size = 1;
     }
     public HeapNode getFirst(){return head;}
+    
    /**
     * public boolean isEmpty()
     *
@@ -50,14 +49,22 @@ public class FibonacciHeap
    public HeapNode insert(int key)
    {
        HeapNode newNode = new HeapNode(key);
-       nonMarked ++;
-       size ++;
-       last.left = newNode;
-       newNode.right = last;
-       last = newNode;
-       if(key < this.min.getKey()){
-           this.min = newNode;
+       
+       if(size ==0) {
+    	   HeapNode oldest = getOldest();
+    	   head = newNode;
+    	   oldest.right = head;
+    	   head.left = oldest;
+    	   min = newNode;
+       } else{
+    	   head.leftConnect(newNode);
+    	   head = newNode;
+    	   if(key < this.min.getKey()){
+    		   this.min = newNode;
+    	   }
        }
+       size ++;
+       nonMarked ++;
        return newNode;
    }
 
@@ -197,20 +204,45 @@ public class FibonacciHeap
     *
     */
    public void meld (FibonacciHeap heap2) {
-
-       HeapNode other = heap2.last;
-       head.right = other;
-       other.left = head;
-       head = heap2.head;
-       size += heap2.size;
-
-       if(heap2.min.getKey() < this.min.getKey()){
-           this.min = heap2.min;
-       }
-       if(heap2.maxDeg.rank > maxDeg.rank){
-           maxDeg = heap2.maxDeg;
-       };
+	   staticMeld(this, heap2);
    }
+   
+   
+   //melds heap2 from the rigth of heap 1
+   public static void staticMeld(FibonacciHeap heap1, FibonacciHeap heap2) {
+	   HeapNode otherHead = heap2.head;
+       HeapNode otherTail = heap2.getOldest();
+       heap1.getOldest().right = otherHead;
+       otherHead.left = heap1.getOldest();
+       otherTail.right = heap1.head;
+       heap1.head.left = otherTail;
+       
+       int newSize = heap1.size + heap2.size;
+       HeapNode newMin = heap1.min;
+       HeapNode newMaxDeg = heap1.maxDeg;
+
+       if(heap2.min.getKey() < heap1.min.getKey()){
+    	   newMin = heap2.min;
+       }
+       if(heap2.maxDeg.rank > heap1.maxDeg.rank){
+    	   newMaxDeg = heap2.maxDeg;
+       }
+       
+       heap1.size = newSize;
+       heap2.size = newSize;
+       heap1.min = newMin;
+       heap2.min = newMin;
+       heap1.maxDeg = newMaxDeg;
+       heap2.maxDeg = newMaxDeg;
+       
+   }
+   
+   //get rightmost node
+   public HeapNode getOldest() {
+	   return head.left;
+   }
+   
+
 
    /**
     * public int size()
@@ -234,11 +266,12 @@ public class FibonacciHeap
     {
     	int[] arr = new int[maxDeg.rank + 1];
         HeapNode curr = this.head;
-        while(curr != null){
-            int deg = curr.rank;
+        do {
+        	int deg = curr.rank;
             arr[deg] ++;
-            curr = curr.left;
+            curr = curr.right;
         }
+        while(curr != head);
         return arr;
     }
 	
@@ -321,7 +354,7 @@ public class FibonacciHeap
         if(left != null){
             left.right = right;
         }
-        this.meld(newHeap);
+        staticMeld(newHeap, this);
     }
 
     public void cascading_cut(HeapNode node, HeapNode parent){
@@ -451,6 +484,15 @@ public class FibonacciHeap
        //sets node rank to k
        public void setRank(int k){
            this.rank = k;
+       }
+       
+       public void leftConnect(HeapNode other) {
+    	   HeapNode temp = this.left;
+    	   this.left = other;
+    	   other.right = this;
+    	   other.left = temp;
+    	   temp.right = other;
+    	   
        }
 
     }
