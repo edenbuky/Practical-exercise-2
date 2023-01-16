@@ -55,6 +55,7 @@ public class FibonacciHeap
     	   head.left = head;
     	   head.right = head;
     	   min = newNode;
+    	   maxDeg = head;
        } else{
     	   head.leftConnect(newNode);
     	   head = newNode;
