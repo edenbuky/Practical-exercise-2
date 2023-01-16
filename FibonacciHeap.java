@@ -9,6 +9,7 @@ public class FibonacciHeap
     public HeapNode maxDeg; //pointer to the largest tree in the heap
     public HeapNode head; //pointer to newest node (lefmost)
     public HeapNode min; //pointer to min node
+    public int n = 0;
     public static int totalLinks = 0;
     public static int totalCuts = 0;
     public int nonMarked = 0;
@@ -25,6 +26,14 @@ public class FibonacciHeap
         maxDeg = root;
         size = 1;
     }
+    
+    public void infoPrint() {
+    	System.out.println("head: " + head.key);
+    	System.out.println("min: " + min.key);
+    	System.out.println("size: " +size);
+    	System.out.println("n: " + n);
+    	
+    }
     public HeapNode getFirst(){return head;}
     
    /**
@@ -36,6 +45,16 @@ public class FibonacciHeap
     public boolean isEmpty()
     {
         return this.size == 0;
+    }
+    
+    // calculate log2 N indirectly
+    // using log() method
+    public static int log2(int N)
+    {
+ 
+        int result = (int)(Math.log(N) / Math.log(2));
+ 
+        return result;
     }
 		
    /**
@@ -64,6 +83,7 @@ public class FibonacciHeap
     	   }
        }
        size ++;
+       n ++;
        nonMarked ++;
        return newNode;
    }
@@ -76,7 +96,8 @@ public class FibonacciHeap
     */
     public void deleteMin()
     {
-        HeapNode current, temp;
+        n --;
+    	HeapNode current, temp;
         //add minimum child-trees to the heap and delete minimum
         current = min.leftChild;
         if (current != null)
@@ -148,13 +169,45 @@ public class FibonacciHeap
         totalLinks ++;
         return root1;
     }
+    
+    public void arrayLink(HeapNode[] array) {
+    	int p = 0;
+    	HeapNode[] newArr = new HeapNode[array.length];
+    	for(HeapNode node : array) {
+    		if(node != null) {
+    			newArr[p] = node;
+    			p ++;
+    		}
+    	}
+    	for(int i = 0; i < p; i++) {
+    		HeapNode curr = newArr[i];
+    		if(newArr[i + 1] != null) {
+    			HeapNode nxt = newArr[i+1];
+    			curr.right = nxt;
+    			nxt.left = curr;
+    		}
+    	}
+    	head = newArr[0];
+    	if(p > 0) {
+    		head.left = newArr[p-1];
+    		newArr[p-1].right = head;
+    	
+    	}else {
+    		head.left = head;
+    		head.right = head;
+    		}
+    	
+    	size = p;
+    	maxDeg = head.left;
+
+    }
 
     /**
      * Successive linking trees with the same rank, to reduce the amount of threes in the heap
      */
     public void consolidating()
     {
-        int maxDegree = maxDeg.rank;
+        int maxDegree = log2(n);
         HeapNode[] rankCells = new HeapNode[maxDegree + 1];
         HeapNode temp, current = head.right;
 
@@ -163,10 +216,12 @@ public class FibonacciHeap
         rankCells[head.rank] = head;
 
         //traverse the root list. Whenever we discover two trees that have the same rank we link these trees.
-        while (current != head)
-        {
+        while (current != head) {
             while (rankCells[current.rank] != null){
+            	int oldRank = current.rank;
                 current = linking(current,rankCells[current.rank]);
+                rankCells[oldRank] = null;
+                
             }
             rankCells[current.rank] = current;
             current = current.right;
@@ -174,16 +229,14 @@ public class FibonacciHeap
         }
 
         //Update the head to the root with the smallest rank
-        current = head.right;
-        temp = head;
-        while (current != head)
-        {
-            if (temp.rank > current.rank){
-                temp = current;
-            }
-            current = current.right;
+        int a = 0;
+        for(HeapNode node : rankCells) {
+        	if (node != null) {
+        		a++;
+        	}
         }
-        head = temp;
+        System.out.println("a" + a);
+        arrayLink(rankCells);
 
     }
    /**
@@ -218,6 +271,7 @@ public class FibonacciHeap
        heap1.head.left = otherTail;
        
        int newSize = heap1.size + heap2.size;
+       int newN = heap1.n + heap2.n;
        HeapNode newMin = heap1.min;
        HeapNode newMaxDeg = heap1.maxDeg;
 
@@ -234,6 +288,8 @@ public class FibonacciHeap
        heap2.min = newMin;
        heap1.maxDeg = newMaxDeg;
        heap2.maxDeg = newMaxDeg;
+       heap1.n = newN;
+       heap2.n = newN;
        
    }
    
@@ -443,8 +499,8 @@ public class FibonacciHeap
     	public int key;
         public int rank = 0; //number of children
         public int mark = 0;
-        public HeapNode right = null;
-        public HeapNode left = null;
+        public HeapNode right = this;
+        public HeapNode left = this;
         public HeapNode parent = null;
         public HeapNode leftChild = null;
 
