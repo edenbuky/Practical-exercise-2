@@ -51,10 +51,9 @@ public class FibonacciHeap
        HeapNode newNode = new HeapNode(key);
        
        if(size ==0) {
-    	   HeapNode oldest = getOldest();
     	   head = newNode;
-    	   oldest.right = head;
-    	   head.left = oldest;
+    	   head.left = head;
+    	   head.right = head;
     	   min = newNode;
        } else{
     	   head.leftConnect(newNode);
@@ -239,6 +238,9 @@ public class FibonacciHeap
    
    //get rightmost node
    public HeapNode getOldest() {
+	   if(size == 0) {
+		   return head;
+	   }
 	   return head.left;
    }
    
