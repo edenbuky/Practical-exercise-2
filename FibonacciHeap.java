@@ -93,21 +93,22 @@ public class FibonacciHeap
         if (current != null)
         {   temp = current.left;
             temp.mark = 0;
+            head = current;
             if (size == 1){
-                head = current;
                 temp.parent = null;
+                min.leftChild = null;
             }
             else {
-            HeapNode l = min.left, r = min.right;
-            head = current;
-            temp.parent = null;
-            current.left = l;
-            l.right = current;
-            min.left = null;
-            temp.right = r;
-            r.left = temp;
-            min.right = null;
-            min.leftChild = null;}
+                HeapNode l = min.left, r = min.right;
+                temp.parent = null;
+                current.left = l;
+                l.right = current;
+                min.left = null;
+                temp.right = r;
+                r.left = temp;
+                min.right = null;
+                min.leftChild = null;
+            }
             while (current != temp) {
                 current.parent = null;
                 if (current.mark == 1) {
@@ -178,9 +179,10 @@ public class FibonacciHeap
         
         else {
         	HeapNode currChild = root1.leftChild;
-            root2.right = currChild;
             root2.left = currChild.left;
+            (currChild.left).right = root2;
             currChild.left = root2;
+            root2.right = currChild;
             if (currChild.right == currChild){currChild.right = root2;}
         }
         root1.leftChild = root2;

@@ -7,7 +7,7 @@ import java.util.Collections;
 
 public class Test {
 
-    static Heap heap;
+    static Heap2 heap2;
     static FibonacciHeap fibonacciHeap;
     static double grade;
     static double testScore;
@@ -195,7 +195,6 @@ public class Test {
         }
 
         for (int i = 0; i < 5; i++) {
-        	System.out.println(i);
             if (fibonacciHeap.findMin().getKey() != i) {
                 bugFound(test);
                 return;
@@ -206,15 +205,15 @@ public class Test {
 
     static void test1() {
         String test = "test1";
-        heap = new Heap();
+        heap2 = new Heap2();
         fibonacciHeap = new FibonacciHeap();
         addKeys(0);
-        while (!heap.isEmpty()) {
-            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+        while (!heap2.isEmpty()) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
                 bugFound(test);
                 return;
             }
-            heap.deleteMin();
+            heap2.deleteMin();
             fibonacciHeap.deleteMin();
         }
         if (!fibonacciHeap.isEmpty())
@@ -223,15 +222,15 @@ public class Test {
 
     static void test2() {
         String test = "test2";
-        heap = new Heap();
+        heap2 = new Heap2();
         fibonacciHeap = new FibonacciHeap();
         addKeysReverse(0);
-        while (!heap.isEmpty()) {
-            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+        while (!heap2.isEmpty()) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
                 bugFound(test);
                 return;
             }
-            heap.deleteMin();
+            heap2.deleteMin();
             fibonacciHeap.deleteMin();
         }
         if (!fibonacciHeap.isEmpty())
@@ -240,17 +239,17 @@ public class Test {
 
     static void test3() {
         String test = "test3";
-        heap = new Heap();
+        heap2 = new Heap2();
         fibonacciHeap = new FibonacciHeap();
         addKeys(0);
         addKeysReverse(4000);
         addKeys(2000);
-        while (!heap.isEmpty()) {
-            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+        while (!heap2.isEmpty()) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
                 bugFound(test);
                 return;
             }
-            heap.deleteMin();
+            heap2.deleteMin();
             fibonacciHeap.deleteMin();
         }
         if (!fibonacciHeap.isEmpty())
@@ -259,18 +258,18 @@ public class Test {
 
     static void test4() {
         String test = "test4";
-        heap = new Heap();
+        heap2 = new Heap2();
         fibonacciHeap = new FibonacciHeap();
         addKeys(0);
         addKeysReverse(4000);
         addKeys(2000);
 
         for (int i = 0; i < 1000; i++) {
-            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
                 bugFound(test);
                 return;
             }
-            heap.deleteMin();
+            heap2.deleteMin();
             fibonacciHeap.deleteMin();
         }
 
@@ -278,12 +277,12 @@ public class Test {
         addKeysReverse(8000);
         addKeys(10000);
 
-        while (!heap.isEmpty()) {
-            if (heap.findMin() != fibonacciHeap.findMin().getKey()) {
+        while (!heap2.isEmpty()) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey()) {
                 bugFound(test);
                 return;
             }
-            heap.deleteMin();
+            heap2.deleteMin();
             fibonacciHeap.deleteMin();
         }
         if (!fibonacciHeap.isEmpty())
@@ -337,7 +336,7 @@ public class Test {
 
     static void test7() {
         String test = "test7";
-        heap = new Heap();
+        heap2 = new Heap2();
         fibonacciHeap = new FibonacciHeap();
         addKeys(1000);
         addKeysReverse(3000);
@@ -345,25 +344,25 @@ public class Test {
         ArrayList<FibonacciHeap.HeapNode> nodes = new ArrayList<>();
 
         for (int i = 2000; i < 3000; i++) {
-            heap.insert(i);
+            heap2.insert(i);
             nodes.add(fibonacciHeap.insert(i));
         }
 
         for (int i = 2000; i < 2500; i++) {
-            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
                 bugFound(test);
                 return;
             }
-            heap.delete(i);
+            heap2.delete(i);
             fibonacciHeap.delete(nodes.get(i - 2000));
         }
 
-        while (!heap.isEmpty()) {
-            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+        while (!heap2.isEmpty()) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
                 bugFound(test);
                 return;
             }
-            heap.deleteMin();
+            heap2.deleteMin();
             fibonacciHeap.deleteMin();
         }
         if (!fibonacciHeap.isEmpty())
@@ -372,7 +371,7 @@ public class Test {
 
     static void test8() {
         String test = "test8";
-        heap = new Heap();
+        heap2 = new Heap2();
         fibonacciHeap = new FibonacciHeap();
         addKeys(7000);
         addKeysReverse(9000);
@@ -380,25 +379,25 @@ public class Test {
         ArrayList<FibonacciHeap.HeapNode> nodes = new ArrayList<>();
 
         for (int i = 2000; i < 3000; i++) {
-            heap.insert(i);
+            heap2.insert(i);
             nodes.add(fibonacciHeap.insert(i));
         }
 
         for (int i = 2000; i < 2500; i++) {
-            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
                 bugFound(test);
                 return;
             }
-            heap.delete(i);
+            heap2.delete(i);
             fibonacciHeap.delete(nodes.get(i - 2000));
         }
 
-        while (!heap.isEmpty()) {
-            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+        while (!heap2.isEmpty()) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
                 bugFound(test);
                 return;
             }
-            heap.deleteMin();
+            heap2.deleteMin();
             fibonacciHeap.deleteMin();
         }
         if (!fibonacciHeap.isEmpty())
@@ -407,7 +406,7 @@ public class Test {
 
     static void test9() {
         String test = "test9";
-        heap = new Heap();
+        heap2 = new Heap2();
         fibonacciHeap = new FibonacciHeap();
         addKeys(7000);
         addKeysReverse(9000);
@@ -415,25 +414,25 @@ public class Test {
         ArrayList<FibonacciHeap.HeapNode> nodes = new ArrayList<>();
 
         for (int i = 2000; i < 3000; i++) {
-            heap.insert(i);
+            heap2.insert(i);
             nodes.add(fibonacciHeap.insert(i));
         }
 
         for (int i = 2700; i > 2200; i--) {
-            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
                 bugFound(test);
                 return;
             }
-            heap.delete(i);
+            heap2.delete(i);
             fibonacciHeap.delete(nodes.get(i - 2000));
         }
 
-        while (!heap.isEmpty()) {
-            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+        while (!heap2.isEmpty()) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
                 bugFound(test);
                 return;
             }
-            heap.deleteMin();
+            heap2.deleteMin();
             fibonacciHeap.deleteMin();
         }
         if (!fibonacciHeap.isEmpty())
@@ -442,7 +441,7 @@ public class Test {
 
     static void test10() {
         String test = "test10";
-        heap = new Heap();
+        heap2 = new Heap2();
         fibonacciHeap = new FibonacciHeap();
         addKeys(7000);
         addKeysReverse(9000);
@@ -450,28 +449,28 @@ public class Test {
         ArrayList<FibonacciHeap.HeapNode> nodes = new ArrayList<>();
 
         for (int i = 2000; i < 3000; i++) {
-            heap.insert(i);
+            heap2.insert(i);
             nodes.add(fibonacciHeap.insert(i));
         }
-        heap.deleteMin();
+        heap2.deleteMin();
         fibonacciHeap.deleteMin();
 
         for (int i = 2700; i > 2200; i--) {
-            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
                 bugFound(test);
                 return;
             }
-            heap.delete(i);
+            heap2.delete(i);
             fibonacciHeap.delete(nodes.get(i - 2000));
         }
 
-        while (!heap.isEmpty()) {
-            if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
+        while (!heap2.isEmpty()) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
 
                 bugFound(test);
                 return;
             }
-            heap.deleteMin();
+            heap2.deleteMin();
             fibonacciHeap.deleteMin();
         }
         if (!fibonacciHeap.isEmpty())
@@ -999,14 +998,14 @@ public class Test {
 
     static void addKeys(int start) {
         for (int i = 0; i < 1000; i++) {//@@@@@@@ i<1000 @@@@@
-            heap.insert(start + i);
+            heap2.insert(start + i);
             fibonacciHeap.insert(start + i);
         }
     }
 
     static void addKeysReverse(int start) {
         for (int i = 999; i >= 0; i--) {
-            heap.insert(start + i);
+            heap2.insert(start + i);
             fibonacciHeap.insert(start + i);
         }
     }
