@@ -139,7 +139,7 @@ public class FibonacciHeap
 
         // Update min-pointer
         current = head.right;
-        min = head.right;
+        min = head;
         while (current != head)
         {
             if (min.getKey() > current.getKey())
@@ -149,6 +149,8 @@ public class FibonacciHeap
             current = current.right;
         }
     }
+    
+    
     /**
      * Linking 2 trees with the same rank
      * //@pre: root1.rank == root2.rank
@@ -376,7 +378,9 @@ public class FibonacciHeap
     {
     	int delta = x.getKey() - min.getKey();
     	decreaseKey(x,delta + 1);
-        deleteMin();
+        
+    	deleteMin();
+
     }
 
    /**
@@ -388,11 +392,9 @@ public class FibonacciHeap
     public void decreaseKey(HeapNode x, int delta) {
     	x.key -= Math.abs(delta);
         HeapNode parent = x.parent;
+        if(x.getKey() < this.min.getKey()){
+            min = x;}
         if(parent == null){
-            if(x.getKey() < this.min.getKey()){
-                min = x;
-                
-            }
             return;
         }
         if(x.getKey() < parent.getKey()){
@@ -431,14 +433,17 @@ public class FibonacciHeap
         HeapNode parent = node.parent;
         HeapNode right = node.right;
         HeapNode left = node.left;
-        node.right = null;
-        node.left = null;
         node.parent = null;
         
         if(parent != null) {
             parent.rank --;
+            
             if(parent.leftChild == node){
-                parent.leftChild = right;
+                if(right == node || left == node) {
+                	parent.leftChild = null;
+                } else {
+                	parent.leftChild = right;
+                }
             }
         }
         if(right != null){
@@ -447,21 +452,28 @@ public class FibonacciHeap
         if(left != null){
             left.right = right;
         }
-        
-        head.leftConnect(node);
+        HeapNode old = head.left;
+        head.left = node;
+        node.right = head;
+        node.left = old;
+        node.mark = 0;
         head = node;
         size ++;
     }
 
     public void cascading_cut(HeapNode node, HeapNode parent){
-        cut(node);
+        
         if(parent.parent != null){
             if(parent.mark == 0){
+            	cut(node);
                 parent.mark = 1;
                 marked ++;
             } else{
                 cascading_cut(parent, parent.parent);
             }
+        } else {
+        	cut(node);
+        	
         }
 
     }
