@@ -92,8 +92,9 @@ public class FibonacciHeap
         }
         //add minimum child-trees to the heap and delete minimum
         current = min.leftChild;
-        if (current != null)
-        {   temp = current.left;
+        if (current != null){
+        	temp = current.left;
+        
             temp.mark = 0;
             head = current;
             if (size == 1){
@@ -173,8 +174,8 @@ public class FibonacciHeap
             r.left = l;
             l.right = r;
         }
-        root2.left = null;
-        root2.right = null;
+//        root2.left = null;
+//        root2.right = null;
 
         if (root1.leftChild == null){
             root2.right = root2;
@@ -215,6 +216,66 @@ public class FibonacciHeap
      * Successive linking trees with the same rank, to reduce the amount of threes in the heap
      */
    
+    public void consolidate() {
+        double phi = (1 + Math.sqrt(5)) / 2;
+        int Dofn = (int) (Math.log(this.n) / Math.log(phi));
+        HeapNode[] A = new HeapNode[Dofn + 1];
+        for (int i = 0; i <= Dofn; ++i)
+          A[i] = null;
+        HeapNode w = head;
+        if (w != null) {
+        	HeapNode check = head;
+          do {
+        	  HeapNode x = w;
+            int d = x.rank;
+            while (A[d] != null) {
+            	HeapNode y = A[d];
+              if (x.getKey() > y.getKey()) {
+            	  HeapNode temp = x;
+                x = y;
+                y = temp;
+                w = x;
+              }
+              fib_heap_link(y, x);
+              check = x;
+              A[d] = null;
+              d += 1;
+            }
+            A[d] = x;
+            w = w.right;
+          } while (w != null && w != check);
+          this.head = null;
+          for (int i = 1; i <= Dofn; ++i) {
+            if (A[i] != null) {
+              insertNode(A[i]);
+            }
+          }
+        }
+      }
+    private HeapNode fib_heap_link(HeapNode y, HeapNode x) {
+    	if(x.getKey() > y.getKey()) {
+    		return fib_heap_link(x,y);
+    	}
+        y.left.right = (y.right);
+        y.right.left = y.left;
+
+        HeapNode p = x.leftChild;
+        if (p == null) {
+          y.right = y;
+          y.left = y;
+        } else {
+          y.right = p;
+          y.left= p.left;
+          p.left.right = y;
+          p.left = y;
+        }
+        y.parent = x;
+        x.leftChild = y;
+        x.rank = x.rank + 1;
+        y.mark = 0;
+        return x;
+      }
+
     public void consolidating()
     {
     	double goldenRatio = (1 + Math.sqrt(5)) / 2;
@@ -446,10 +507,10 @@ public class FibonacciHeap
                 }
             }
         }
-        if(right != null){
+        if(right != node){
             right.left = left;
         }
-        if(left != null){
+        if(left != node){
             left.right = right;
         }
         HeapNode old = head.left;
@@ -462,19 +523,15 @@ public class FibonacciHeap
     }
 
     public void cascading_cut(HeapNode node, HeapNode parent){
-        
+    	cut(node);
         if(parent.parent != null){
             if(parent.mark == 0){
-            	cut(node);
+            	//cut(node);
                 parent.mark = 1;
                 marked ++;
             } else{
                 cascading_cut(parent, parent.parent);
-            }
-        } else {
-        	cut(node);
-        	
-        }
+            }}
 
     }
 
