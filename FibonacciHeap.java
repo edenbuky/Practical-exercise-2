@@ -22,6 +22,8 @@ public class FibonacciHeap
     public FibonacciHeap(HeapNode root){
         min = root;
         head = root;
+        head.right = head;
+        head.left = head;
         maxDeg = root;
         size = 1;
     }
@@ -137,7 +139,7 @@ public class FibonacciHeap
 
         // Update min-pointer
         current = head.right;
-        min = head;
+        min = head.right;
         while (current != head)
         {
             if (min.getKey() > current.getKey())
@@ -332,8 +334,6 @@ public class FibonacciHeap
 	   return head.left;
    }
    
-
-
    /**
     * public int size()
     *
@@ -374,7 +374,8 @@ public class FibonacciHeap
     */
     public void delete(HeapNode x)
     {
-    	decreaseKey(x,min.getKey() - 1);
+    	int delta = x.getKey() - min.getKey();
+    	decreaseKey(x,delta + 1);
         deleteMin();
     }
 
@@ -385,16 +386,18 @@ public class FibonacciHeap
     * to reflect this change (for example, the cascading cuts procedure should be applied if needed).
     */
     public void decreaseKey(HeapNode x, int delta) {
-    	x.key -= delta;
+    	x.key -= Math.abs(delta);
         HeapNode parent = x.parent;
         if(parent == null){
             if(x.getKey() < this.min.getKey()){
                 min = x;
-                return;
+                
             }
+            return;
         }
         if(x.getKey() < parent.getKey()){
             cascading_cut(x, parent);
+            
         }
     }
 
@@ -431,7 +434,7 @@ public class FibonacciHeap
         node.right = null;
         node.left = null;
         node.parent = null;
-        FibonacciHeap newHeap = new FibonacciHeap(node);
+        
         if(parent != null) {
             parent.rank --;
             if(parent.leftChild == node){
@@ -444,7 +447,10 @@ public class FibonacciHeap
         if(left != null){
             left.right = right;
         }
-        staticMeld(newHeap, this);
+        
+        head.leftConnect(node);
+        head = node;
+        size ++;
     }
 
     public void cascading_cut(HeapNode node, HeapNode parent){
