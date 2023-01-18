@@ -1,8 +1,9 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class myTest {
 	static HeapPrinter printer = new HeapPrinter(System.out);
-	static Heap2 heap2;
+	static Heap2 heap2 = new Heap2();
 	static FibonacciHeap.HeapNode node1 = new FibonacciHeap.HeapNode(4);
 
     static FibonacciHeap fibonacciHeap;
@@ -11,11 +12,64 @@ public class myTest {
 	public static void main(String[] args) {
 
 
-		test9();
+		test0();
 		
 		
 	}
+    static void test0() {
+        String test = "test0";
+        fibonacciHeap = new FibonacciHeap();
 
+        ArrayList<Integer> numbers = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+            numbers.add(i);
+        }
+
+        Collections.shuffle(numbers);
+
+        for (int i = 0; i < 5; i++) {
+            fibonacciHeap.insert(numbers.get(i));
+
+        }
+
+        for (int i = 0; i < 5; i++) {
+            printer.print(fibonacciHeap, false);
+            System.out.println("min= "+fibonacciHeap.min.getKey() + " size= " + fibonacciHeap.size()+ " n= "+fibonacciHeap.n);
+            if (fibonacciHeap.findMin().getKey() != i) {
+                System.out.println("min key is not "+i);
+                return;
+            }
+            fibonacciHeap.deleteMin();
+        }
+    }
+    static void testE() {
+
+        fibonacciHeap = new FibonacciHeap();
+        addKeys(0);
+        printer.print(fibonacciHeap, false);
+        fibonacciHeap.deleteMin();
+        printer.print(fibonacciHeap, false);
+        fibonacciHeap.deleteMin();
+        printer.print(fibonacciHeap, false);
+        fibonacciHeap.deleteMin();
+        printer.print(fibonacciHeap, false);
+        fibonacciHeap.deleteMin();
+        printer.print(fibonacciHeap, false);
+        fibonacciHeap.deleteMin();
+        printer.print(fibonacciHeap, false);
+        fibonacciHeap.deleteMin();
+        printer.print(fibonacciHeap, false);
+        fibonacciHeap.deleteMin();
+        printer.print(fibonacciHeap, false);
+        fibonacciHeap.deleteMin();
+        printer.print(fibonacciHeap, false);
+        fibonacciHeap.deleteMin();
+        printer.print(fibonacciHeap, false);
+        fibonacciHeap.deleteMin();
+        printer.print(fibonacciHeap, false);
+
+    }
     static void testY() {
     	fibonacciHeap = new FibonacciHeap();
     	for(int i = 0; i < 10; i++) {
@@ -40,7 +94,7 @@ public class myTest {
             fibonacciHeap.insert(start + i);
         }
     }
-    
+
     static void test9() {
         String test = "test9";
         heap2 = new Heap2();

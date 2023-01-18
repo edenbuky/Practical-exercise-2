@@ -77,81 +77,81 @@ public class FibonacciHeap
     * Deletes the node containing the minimum key.
     *
     */
-    public void deleteMin() {
-        n --;
-    	HeapNode current, temp;
-        if (n == 0){
-            head = null;
-            min = null;
-            maxDeg = null;
-            size = 0;
-            return;
-        }
-        if (head == min){
-            head = min.right;
-        }
-        //add minimum child-trees to the heap and delete minimum
-        current = min.leftChild;
-        if (current != null){
-        	temp = current.left;
-        
-            temp.mark = 0;
-            head = current;
-            if (size == 1){
-                temp.parent = null;
-                min.leftChild = null;
-            }
-            else {
-                HeapNode l = min.left, r = min.right;
-                temp.parent = null;
-                current.left = l;
-                l.right = current;
-                min.left = null;
-                temp.right = r;
-                r.left = temp;
-                min.right = null;
-                min.leftChild = null;
-            }
-            while (current != temp) {
-                current.parent = null;
-                if (current.mark == 1) {
-                    current.mark = 0;
-                    marked--;
-                }
-                current = current.right;
-            }
-        }
+//    public void deleteMin2() {
+//        n --;
+//    	HeapNode current, temp;
+//        if (n == 0){
+//            head = null;
+//            min = null;
+//            maxDeg = null;
+//            size = 0;
+//            return;
+//        }
+//        if (head == min){
+//            head = min.right;
+//        }
+//
+//        current = min.leftChild;
+//        if (current != null){
+//        	temp = current.left;
+//
+//            temp.mark = 0;
+//            head = current;
+//            if (size == 1){
+//                temp.parent = null;
+//                min.leftChild = null;
+//            }
+//            else {
+//                HeapNode l = min.left, r = min.right;
+//                temp.parent = null;
+//                current.left = l;
+//                l.right = current;
+//                min.left = null;
+//                temp.right = r;
+//                r.left = temp;
+//                min.right = null;
+//                min.leftChild = null;
+//            }
+//            while (current != temp) {
+//                current.parent = null;
+//                if (current.mark == 1) {
+//                    current.mark = 0;
+//                    marked--;
+//                }
+//                current = current.right;
+//            }
+//        }
+//
+//        else
+//        {
+//           current = min.left;
+//           temp = min.right;
+//           current.right = temp;
+//           temp.left = current;
+//           min.left = null;
+//           min.right = null;
+//        }
+//
+//        //Successive Linking
+//        if (head.left == head && head.right == head){
+//            update(head);
+//        }
+//        else {consolidating();}
+//
+//        // Update min-pointer
+//        current = head.right;
+//        min = head;
+//        while (current != head)
+//        {
+//            if (min.getKey() > current.getKey())
+//            {
+//                min = current;
+//            }
+//            current = current.right;
+//        }
+//    }
 
-        else
-        {
-           current = min.left;
-           temp = min.right;
-           current.right = temp;
-           temp.left = current;
-           min.left = null;
-           min.right = null;
-        }
 
-        //Successive Linking
-        if (head.left == head && head.right == head){
-            update(head);
-        }
-        else {consolidating();}
-
-        // Update min-pointer
-        current = head.right;
-        min = head;
-        while (current != head)
-        {
-            if (min.getKey() > current.getKey())
-            {
-                min = current;
-            }
-            current = current.right;
-        }
-    }
-    
-    
     /**
      * Linking 2 trees with the same rank
      * //@pre: root1.rank == root2.rank
@@ -162,7 +162,7 @@ public class FibonacciHeap
         if (root1.getKey() > root2.getKey()){
             return linking(root2,root1);
         }
-        
+
         HeapNode r = root2.right,l = root2.left;
         if (r == root1) {
             root1.left = root2.left;
@@ -174,14 +174,12 @@ public class FibonacciHeap
             r.left = l;
             l.right = r;
         }
-//        root2.left = null;
-//        root2.right = null;
 
         if (root1.leftChild == null){
             root2.right = root2;
             root2.left = root2;
         }
-        
+
         else {
         	HeapNode currChild = root1.leftChild;
             root2.left = currChild.left;
@@ -196,125 +194,171 @@ public class FibonacciHeap
         totalLinks ++;
         return root1;
     }
-    
-    public void update(HeapNode temp) {
-        HeapNode current;
-        current = temp.right;
-        int newSize = 1;
-        while (current != temp){
-            newSize++;
-            if (current.rank < head.rank ){
-                head = current;
+
+//    public void update(HeapNode temp) {
+//        HeapNode current;
+//        current = temp.right;
+//        int newSize = 1;
+//        while (current != temp){
+//            newSize++;
+//            if (current.rank < head.rank ){
+//                head = current;
+//            }
+//            current = current.right;
+//        }
+//        size = newSize;
+//
+//    }
+    public void deleteMin() {
+        //Only min in the Heap;
+        if (min.leftChild == null && min.left == min){
+            n = 0;
+            size = 0;
+            head = null;
+            min = null;
+            return;
+        }
+        if (head == min && min.left != min){head = min.left;}
+        else if (head == min) {head = min.leftChild;}
+        //add min's Children to the root-list and delete minimum
+        int deg = min.rank;
+        if (min.leftChild != null){
+            HeapNode curr = min.leftChild, nxt = curr.right;
+            for (int i = 0; i < deg; i++) {
+                curr.parent = null;
+                if (curr.mark == 1){
+                    curr.mark = 0;
+                    marked--;
+                }
+                min.leftConnect(curr);
+                curr = nxt;
+                nxt = nxt.right;
+            }
+        }
+        min.selfRemove();
+        size += deg - 1;
+        n--;
+
+        //successive-linking
+        consolidating();
+    }
+    public void consolidating(){
+        updateMin();
+        double goldenRatio = (1 + Math.sqrt(5)) / 2;
+        int maxDegree = (int) (Math.log(this.n) / Math.log(goldenRatio));
+        HeapNode[] B = new HeapNode[maxDegree + 1];
+        // Iterate over all roots
+        for (HeapNode node : getRoots()) {
+            // Check if no other no with the same rank
+            if (B[node.rank] == null) {
+                B[node.rank] = node;
+            } else {
+                // Carry to higher ranks while linking
+                while (B[node.rank] != null) {
+                    // Connect the 2 nodes with the same rank
+                    node = linking(node, B[node.rank]);
+                    // Clear current node from the array
+                    B[node.rank - 1] = null;
+                }
+                // Put node in the array
+                B[node.rank] = node;
+            }
+        }
+
+        linkArray(B);
+    }
+
+    public void linkArray(HeapNode[] arr) {
+        HeapNode last = null;
+        HeapNode first = null;
+        int count = 0;
+        for (HeapNode node : arr) {
+            if (node == null)
+                continue;
+            count++;
+            if (first == null)
+                first = node;
+            if (last == null) {
+                last = node;
+                continue;
+            }
+
+            node.left = last;
+            last.right = node;
+
+            last = node;
+        }
+        last.right = first;
+        first.left = last;
+        head = first;
+        size = count;
+    }
+    public void updateMin() {
+        HeapNode current = head.right;
+        min = head;
+        while (current != head)
+        {
+            if (min.getKey() > current.getKey())
+            {
+                min = current;
             }
             current = current.right;
         }
-        size = newSize;
-
     }
-
+    private HeapNode[] getRoots() {
+        HeapNode[] arr = new HeapNode[size];
+        HeapNode curr = head;
+        for(int i = 0; i < arr.length; i++) {
+            arr[i] = curr;
+            curr = curr.right;
+        }
+        return arr;
+    }
     /**
      * Successive linking trees with the same rank, to reduce the amount of threes in the heap
      */
    
-    public void consolidate() {
-        double phi = (1 + Math.sqrt(5)) / 2;
-        int Dofn = (int) (Math.log(this.n) / Math.log(phi));
-        HeapNode[] A = new HeapNode[Dofn + 1];
-        for (int i = 0; i <= Dofn; ++i)
-          A[i] = null;
-        HeapNode w = head;
-        if (w != null) {
-        	HeapNode check = head;
-          do {
-        	  HeapNode x = w;
-            int d = x.rank;
-            while (A[d] != null) {
-            	HeapNode y = A[d];
-              if (x.getKey() > y.getKey()) {
-            	  HeapNode temp = x;
-                x = y;
-                y = temp;
-                w = x;
-              }
-              fib_heap_link(y, x);
-              check = x;
-              A[d] = null;
-              d += 1;
-            }
-            A[d] = x;
-            w = w.right;
-          } while (w != null && w != check);
-          this.head = null;
-          for (int i = 1; i <= Dofn; ++i) {
-            if (A[i] != null) {
-              insertNode(A[i]);
-            }
-          }
-        }
-      }
-    private HeapNode fib_heap_link(HeapNode y, HeapNode x) {
-    	if(x.getKey() > y.getKey()) {
-    		return fib_heap_link(x,y);
-    	}
-        y.left.right = (y.right);
-        y.right.left = y.left;
 
-        HeapNode p = x.leftChild;
-        if (p == null) {
-          y.right = y;
-          y.left = y;
-        } else {
-          y.right = p;
-          y.left= p.left;
-          p.left.right = y;
-          p.left = y;
-        }
-        y.parent = x;
-        x.leftChild = y;
-        x.rank = x.rank + 1;
-        y.mark = 0;
-        return x;
-      }
 
-    public void consolidating()
-    {
-    	double goldenRatio = (1 + Math.sqrt(5)) / 2;
-        int maxDegree = (int) (Math.log(this.n) / Math.log(goldenRatio));
-        HeapNode[] rankCells = new HeapNode[maxDegree + 1];
-        HeapNode temp = head, last = getOldest(), current = head, nxt= head.right;
-        int deg;
-        boolean lastIter = false,indicator = true;
-        //emptying the array
-        for (int i = 0; i <= maxDegree; i++){rankCells[i] = null;}
-
-        //traverse the root list. Whenever we discover two trees that have the same rank we link these trees.
-        while (indicator) {
-            if (lastIter){
-                indicator = false;
-            }
-            deg = current.rank;
-            temp = current;
-            while (rankCells[deg] != null) {
-                temp = linking(temp, rankCells[deg]);
-                rankCells[deg] = null;
-                deg = temp.rank;
-            }
-            rankCells[deg] = temp;
-            if (!indicator){
-                head = temp;
-                break;
-            }
-            current = nxt;
-            nxt = nxt.right;
-            if (current == last){
-                lastIter = true;
-            }
-        }
-
-        //Update the head to the root with the smallest rank
-        update(temp);
-
-    }
+//    public void consolidating2()
+//    {
+//    	double goldenRatio = (1 + Math.sqrt(5)) / 2;
+//        int maxDegree = (int) (Math.log(this.n) / Math.log(goldenRatio));
+//        HeapNode[] rankCells = new HeapNode[maxDegree + 1];
+//        HeapNode temp = head, last = getOldest(), current = head, nxt= head.right;
+//        int deg;
+//        boolean lastIter = false,indicator = true;
+//        //emptying the array
+//        for (int i = 0; i <= maxDegree; i++){rankCells[i] = null;}
+//
+//        //traverse the root list. Whenever we discover two trees that have the same rank we link these trees.
+//        while (indicator) {
+//            if (lastIter){
+//                indicator = false;
+//            }
+//            deg = current.rank;
+//            temp = current;
+//            while (rankCells[deg] != null) {
+//                temp = linking(temp, rankCells[deg]);
+//                rankCells[deg] = null;
+//                deg = temp.rank;
+//            }
+//            rankCells[deg] = temp;
+//            if (!indicator){
+//                head = temp;
+//                break;
+//            }
+//            current = nxt;
+//            nxt = nxt.right;
+//            if (current == last){
+//                lastIter = true;
+//            }
+//        }
+//
+//        //Update the head to the root with the smallest rank
+//        update(temp);
+//
+//    }
    /**
     * public HeapNode findMin()
     *
@@ -670,8 +714,54 @@ public class FibonacciHeap
     	   other.right = this;
     	   other.left = temp;
     	   temp.right = other;
-    	   
+           if (this.parent != null) {
+               this.parent.rank++;
+               this.parent.leftChild = other;
+           }
        }
-
+       public void selfRemove() {
+           // Have no siblings
+           if (left == this) {
+               if (this.parent != null) {
+                   this.parent.leftChild = null;
+                   this.parent.rank--;
+               }
+           } else { //Have siblings
+               if (this.parent != null) {
+                   if (this.parent.leftChild == this) {
+                       this.parent.leftChild = this.left;
+                   }
+                   this.parent.rank--;
+               }
+               this.right.left = this.left;
+               this.left.right = this.right;
+           }
+       }
+//        public void removeFromSiblings() {
+//            if (next == this) {
+//                if (this.parent != null) {
+//                    this.parent.child = null;
+//                    this.parent.rank--; // or 0
+//                }
+//            } else {
+//                if (this.parent != null) {
+//                    if (this.parent.child == this) {
+//                        this.parent.child = this.next;
+//                    }
+//                    this.parent.rank--;
+//                }
+//                this.next.prev = this.prev;
+//                this.prev.next = this.next;
+//            }
+//        }
+//        public void addSibling(HeapNode sibling) {
+//            sibling.next = next;
+//            next.prev = sibling;
+//            if (this.parent != null) {
+//                this.parent.rank++;
+//            }
+//            sibling.prev = this;
+//            next = sibling;
+//        }
     }
 }

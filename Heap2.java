@@ -1,9 +1,9 @@
 import java.util.TreeSet;
 
-class Heap {
+class Heap2 {
     private TreeSet<Integer> set;
 
-    Heap() {
+    Heap2() {
         this.set = new TreeSet<Integer>();
     }
 
