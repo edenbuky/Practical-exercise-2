@@ -12,11 +12,14 @@ public class myTest {
 	public static void main(String[] args) {
 
 
+		testY();
 		test0();
+		printer.print(fibonacciHeap, false);
+		System.out.println("done");
 		
 		
 	}
-    static void test0() {
+	static void test0() {
         String test = "test0";
         fibonacciHeap = new FibonacciHeap();
 
@@ -30,57 +33,36 @@ public class myTest {
 
         for (int i = 0; i < 5; i++) {
             fibonacciHeap.insert(numbers.get(i));
-
         }
 
         for (int i = 0; i < 5; i++) {
-            printer.print(fibonacciHeap, false);
-            System.out.println("min= "+fibonacciHeap.min.getKey() + " size= " + fibonacciHeap.size()+ " n= "+fibonacciHeap.n);
             if (fibonacciHeap.findMin().getKey() != i) {
-                System.out.println("min key is not "+i);
+            	System.out.println("error" +fibonacciHeap.findMin().getKey());
                 return;
             }
             fibonacciHeap.deleteMin();
         }
     }
-    static void testE() {
-
-        fibonacciHeap = new FibonacciHeap();
-        addKeys(0);
-        printer.print(fibonacciHeap, false);
-        fibonacciHeap.deleteMin();
-        printer.print(fibonacciHeap, false);
-        fibonacciHeap.deleteMin();
-        printer.print(fibonacciHeap, false);
-        fibonacciHeap.deleteMin();
-        printer.print(fibonacciHeap, false);
-        fibonacciHeap.deleteMin();
-        printer.print(fibonacciHeap, false);
-        fibonacciHeap.deleteMin();
-        printer.print(fibonacciHeap, false);
-        fibonacciHeap.deleteMin();
-        printer.print(fibonacciHeap, false);
-        fibonacciHeap.deleteMin();
-        printer.print(fibonacciHeap, false);
-        fibonacciHeap.deleteMin();
-        printer.print(fibonacciHeap, false);
-        fibonacciHeap.deleteMin();
-        printer.print(fibonacciHeap, false);
-        fibonacciHeap.deleteMin();
-        printer.print(fibonacciHeap, false);
-
-    }
-    static void testY() {
-    	fibonacciHeap = new FibonacciHeap();
-    	for(int i = 0; i < 10; i++) {
-    		FibonacciHeap.HeapNode node = fibonacciHeap.insert(i);
-    		nodeArr.add(node);
-    	}
-    	printer.print(fibonacciHeap, false);
-    	fibonacciHeap.delete(nodeArr.get(1));
-    	printer.print(fibonacciHeap, false);
-    }
 	
+	static void testY() {
+		fibonacciHeap = new FibonacciHeap();
+		for(int i = 0; i < 10; i++) {
+			fibonacciHeap.insert(i);
+		}
+		printer.print(fibonacciHeap, false);
+		System.out.println(fibonacciHeap.findMin().getKey());
+		
+		fibonacciHeap.deleteMin();
+		printer.print(fibonacciHeap, false);
+		printer.print(fibonacciHeap, true);
+		System.out.println(fibonacciHeap.findMin().getKey());
+		
+		fibonacciHeap.deleteMin();
+		
+		
+		
+		
+	}
 
     static void addKeys(int start) {
         for (int i = 0; i < 10; i++) {//@@@@@@@ i<1000 @@@@@
