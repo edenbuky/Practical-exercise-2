@@ -7,7 +7,6 @@
  */
 public class FibonacciHeap
 {
-	static HeapPrinter printer = new HeapPrinter(System.out);
 	public int numOfTrees = 0; //num of trees
     public HeapNode head; //pointer to newest node (lefmost)
     public HeapNode min; //pointer to min node
