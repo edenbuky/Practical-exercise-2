@@ -199,7 +199,8 @@ public class Test {
             grade -= 8;
         }
         try {
-            //test30();
+            test30();
+            System.out.println("pass 30");
         } catch (Exception e) {
             System.out.println("Bug found in " + "test30");
             grade -= 8;
@@ -239,7 +240,7 @@ public class Test {
         fibonacciHeap = new FibonacciHeap();
         addKeys(0);
         while (!heap2.isEmpty()) {
-            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.size) {
                 bugFound(test);
                 return;
             }
@@ -256,7 +257,7 @@ public class Test {
         fibonacciHeap = new FibonacciHeap();
         addKeysReverse(0);
         while (!heap2.isEmpty()) {
-            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.size) {
                 bugFound(test);
                 return;
             }
@@ -275,7 +276,7 @@ public class Test {
         addKeysReverse(4000);
         addKeys(2000);
         while (!heap2.isEmpty()) {
-            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.size) {
                 bugFound(test);
                 return;
             }
@@ -295,7 +296,7 @@ public class Test {
         addKeys(2000);
 
         for (int i = 0; i < 1000; i++) {
-            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.size) {
                 bugFound(test);
                 return;
             }
@@ -379,7 +380,7 @@ public class Test {
         }
 
         for (int i = 2000; i < 2500; i++) {
-            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.size) {
                 bugFound(test);
                 return;
             }
@@ -388,7 +389,7 @@ public class Test {
         }
 
         while (!heap2.isEmpty()) {
-            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.size) {
                 bugFound(test);
                 return;
             }
@@ -414,7 +415,7 @@ public class Test {
         }
 
         for (int i = 2000; i < 2500; i++) {
-            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.size) {
                 bugFound(test);
                 return;
             }
@@ -423,7 +424,7 @@ public class Test {
         }
 
         while (!heap2.isEmpty()) {
-            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.size) {
                 bugFound(test);
                 return;
             }
@@ -449,7 +450,7 @@ public class Test {
         }
 
         for (int i = 2700; i > 2200; i--) {
-            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.size) {
                 bugFound(test);
                 return;
             }
@@ -458,7 +459,7 @@ public class Test {
         }
 
         while (!heap2.isEmpty()) {
-            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.size) {
                 bugFound(test);
                 return;
             }
@@ -486,7 +487,7 @@ public class Test {
         fibonacciHeap.deleteMin();
 
         for (int i = 2700; i > 2200; i--) {
-            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.size) {
                 bugFound(test);
                 return;
             }
@@ -495,7 +496,7 @@ public class Test {
         }
 
         while (!heap2.isEmpty()) {
-            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.n) {
+            if (heap2.findMin() != fibonacciHeap.findMin().getKey() || heap2.size() != fibonacciHeap.size) {
 
                 bugFound(test);
                 return;
