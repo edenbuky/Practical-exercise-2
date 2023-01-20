@@ -14,6 +14,7 @@ public class FibonacciHeap
     public static int totalLinks = 0;
     public static int totalCuts = 0;
     public int marked = 0;
+    public int maxDeg = 0;
 
 
     public FibonacciHeap(){
@@ -127,16 +128,16 @@ public class FibonacciHeap
         if (min.leftChild == null && min.left == min){
             size = 0;
             numOfTrees = 0;
+            maxDeg = 0;
             head = null;
             min = null;
             return;
         }
-        if (head == min && min.left != min){head = min.left;}
-        else if (head == min) {head = min.leftChild;}
         //add min's Children to the root-list and delete minimum
         int deg = min.rank;
         if (min.leftChild != null){
             HeapNode curr = min.leftChild, nxt = curr.right;
+            if(numOfTrees == 2 && head == min){head = curr;}
             for (int i = 0; i < deg; i++) {
                 curr.parent = null;
                 if (curr.mark == 1){
@@ -148,6 +149,8 @@ public class FibonacciHeap
                 nxt = nxt.right;
             }
         }
+        if (head == min && min.right != min){head = min.right;}
+        else if (head == min) {head = min.leftChild;}
         min.selfRemove();
         numOfTrees += deg - 1;
         size--;
@@ -164,20 +167,20 @@ public class FibonacciHeap
         updateMin();
         double goldenRatio = (1 + Math.sqrt(5)) / 2;
         int maxDegree = (int) (Math.log(this.size) / Math.log(goldenRatio));
-        HeapNode[] B = new HeapNode[maxDegree + 1];
+        HeapNode[] degCell = new HeapNode[maxDegree + 1];
         for (HeapNode node : getRoots()) {
-            if (B[node.rank] == null) {
-                B[node.rank] = node;
+            if (degCell[node.rank] == null) {
+                degCell[node.rank] = node;
             } else {
-                while (B[node.rank] != null) {
-                    node = linking(node, B[node.rank]);
-                    B[node.rank - 1] = null;
+                while (degCell[node.rank] != null) {
+                    node = linking(node, degCell[node.rank]);
+                    degCell[node.rank - 1] = null;
                 }
-                B[node.rank] = node;
+                degCell[node.rank] = node;
             }
         }
 
-        linkArray(B);
+        linkArray(degCell);
     }
     /**
      *  Get array Successive linking
@@ -208,6 +211,7 @@ public class FibonacciHeap
         
         head = first;
         numOfTrees = count;
+        maxDeg = last.rank;
     }
 
     /**
@@ -296,8 +300,11 @@ public class FibonacciHeap
        heap2.size = newN;
        heap1.marked = newM;
        heap2.marked = newM;
+       if (heap1.maxDeg < heap2.maxDeg){
+           heap1.maxDeg = heap2.maxDeg;
+       }
+       else { heap2.maxDeg = heap1.maxDeg;}
 
-       
    }
 
    /**
@@ -319,15 +326,15 @@ public class FibonacciHeap
     * 
     */
     public int[] countersRep(){
-    	double goldenRatio = (1 + Math.sqrt(5)) / 2;
-        int maxDegree = (int) (Math.log(this.size) / Math.log(goldenRatio));
-    	int[] arr = new int[maxDegree + 1];
+        if (isEmpty()){
+            return new int[0];
+        }
+    	int[] arr = new int[maxDeg + 1];
         HeapNode[] roots = getRoots();
         for(HeapNode root : roots) {
         	arr[root.rank] ++;
         }
         return arr;
-        
     }
 	
    /**
@@ -361,7 +368,7 @@ public class FibonacciHeap
         }
         if(x.getKey() < parent.getKey()){
             cascading_cut(x, parent);
-            
+            updateMaxDeg();
         }
     }
     public void cut(HeapNode node) {
@@ -392,6 +399,7 @@ public class FibonacciHeap
         head.left = node;
         node.right = head;
         node.left = old;
+        old.right = node;
         if(node.mark == 1) {
             node.mark = 0;
             marked --;
@@ -409,7 +417,15 @@ public class FibonacciHeap
             } else{
                 cascading_cut(parent, parent.parent);
             }}
-
+    }
+    public void updateMaxDeg(){
+        int newMaxdeg = 0;
+        for (HeapNode node : getRoots()){
+            if (newMaxdeg < node.rank){
+                newMaxdeg = node.rank;
+            }
+        }
+        maxDeg = newMaxdeg;
     }
    /**
     * public int nonMarked() 
@@ -564,7 +580,6 @@ public class FibonacciHeap
         }
         return arr;
     }
-
 
 
 
