@@ -509,22 +509,6 @@ public class FibonacciHeap
                 head = newNode;
                 this.len++;
             }
-            public void remove(HeapNode data) {
-                Node current = head;
-                Node prev = null;
-                while(current != null) {
-                    if(current.data == data) {
-                        if(prev == null) {
-                            head = current.next;
-                        } else {
-                            prev.next = current.next;
-                        }
-                        return;
-                    }
-                    prev = current;
-                    current = current.next;
-                }
-            }
             public HeapNode[] listToArrey() {
                 HeapNode[] arr = new HeapNode[len];
                 int i = 0;
