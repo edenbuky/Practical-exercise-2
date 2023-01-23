@@ -1,6 +1,8 @@
 
 
 /**
+ * ID_student1 316444892
+ * ID_student2 207482993
  * FibonacciHeap
  *
  * An implementation of a Fibonacci Heap over integers.
@@ -55,6 +57,7 @@ public class FibonacciHeap
        return newNode;
    }
    
+   //inserts a given node to the heap (from the left)
    public void insert(HeapNode newNode) {
 	   if(numOfTrees ==0) {
     	   head = newNode;
@@ -154,33 +157,45 @@ public class FibonacciHeap
         min.selfRemove();
         numOfTrees += deg - 1;
         size--;
+        
+        int[] counters = countersRep();
+        boolean needsCons = false;
+        for(int i : counters) {
+        	if(i > 1) {
+        		needsCons = true;
+        		break;
+        	}
+        }
 
         //successive-linking
-        consolidating();
+        consolidating(needsCons);
     }
  
     
     /**
      * Successive linking trees with the same rank, to reduce the amount of threes in the heap
      */
-    public void consolidating(){
-        updateMin();
-        double goldenRatio = (1 + Math.sqrt(5)) / 2;
-        int maxDegree = (int) (Math.log(this.size) / Math.log(goldenRatio));
-        HeapNode[] degCell = new HeapNode[maxDegree + 1];
-        for (HeapNode node : getRoots()) {
-            if (degCell[node.rank] == null) {
-                degCell[node.rank] = node;
-            } else {
-                while (degCell[node.rank] != null) {
-                    node = linking(node, degCell[node.rank]);
-                    degCell[node.rank - 1] = null;
-                }
-                degCell[node.rank] = node;
-            }
-        }
-
-        linkArray(degCell);
+    public void consolidating(boolean needsCons){
+    	
+        if (needsCons) {
+			double goldenRatio = (1 + Math.sqrt(5)) / 2;
+			int maxDegree = (int) (Math.log(this.size) / Math.log(goldenRatio));
+			HeapNode[] degCell = new HeapNode[maxDegree + 1];
+			for (HeapNode node : getRoots()) {
+				if (degCell[node.rank] == null) {
+					degCell[node.rank] = node;
+				} else {
+					while (degCell[node.rank] != null) {
+						node = linking(node, degCell[node.rank]);
+						degCell[node.rank - 1] = null;
+					}
+					degCell[node.rank] = node;
+				}
+			}
+			linkArray(degCell);
+		}
+		updateMin();
+        
     }
     /**
      *  Get array Successive linking
@@ -215,7 +230,7 @@ public class FibonacciHeap
     }
 
     /**
-     * Run throw all the roots in it's trees-list and find the new minimum
+     * Run through all the roots in it's trees-list and find the new minimum
      */
     public void updateMin() {
     	HeapNode m = head;
@@ -371,6 +386,8 @@ public class FibonacciHeap
             updateMaxDeg();
         }
     }
+    
+    //cuts given node from tree and adds it to the heap
     public void cut(HeapNode node) {
         totalCuts ++;
         HeapNode parent = node.parent;
@@ -408,6 +425,8 @@ public class FibonacciHeap
         numOfTrees ++;
     }
 
+    //cascading cut as learned in class. marks parent of child which is being cut. if is marked - cuts it too.
+    //recursive
     public void cascading_cut(HeapNode node, HeapNode parent){
         cut(node);
         if(parent.parent != null){
@@ -418,6 +437,8 @@ public class FibonacciHeap
                 cascading_cut(parent, parent.parent);
             }}
     }
+    
+    //update pointer maxDeg
     public void updateMaxDeg(){
         int newMaxdeg = 0;
         for (HeapNode node : getRoots()){
@@ -555,6 +576,8 @@ public class FibonacciHeap
         }
         return head.left;
     }
+    
+    //get all roots of the heap
     private HeapNode[] getRoots() {
         HeapNode[] arr = new HeapNode[numOfTrees];
         HeapNode curr = head;
@@ -564,6 +587,7 @@ public class FibonacciHeap
         }
         return arr;
     }
+
 
 
 
@@ -591,8 +615,12 @@ public class FibonacciHeap
     	public int getKey() {
     		return this.key;
     	}
+        
+        public String toString() {
+        	return "" + key;
+        }
 
-       
+       //connect other node to the left of this node
        public void leftConnect(HeapNode other) {
     	   HeapNode temp = this.left;
     	   this.left = other;
@@ -606,6 +634,7 @@ public class FibonacciHeap
 
 
     	  }
+       //removes this node from its connections
        public void selfRemove() {
            // Have no siblings
            if (left == this) {
@@ -624,6 +653,8 @@ public class FibonacciHeap
                this.left.right = this.right;
            }
        }
+       
+       //get an array of all the children of this node
        
        public HeapNode[] getChildrenArray() {
     	   HeapNode[] arr = new HeapNode[rank];
